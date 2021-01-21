@@ -47,7 +47,11 @@ function reverseDeepMerge(dest) {
     }
     angular.forEach(src, (val, prop) => {
       if (!angular.isDefined(dest[prop])) {
-        dest[prop] = angular.copy(val)
+        if (typeof val === 'object' && val !== null) {
+          dest[prop] = Object.assign(Object.create(val.__proto__), val);
+        } else {
+          dest[prop] = val;
+        }
       } else if (objAndSameType(dest[prop], val)) {
         reverseDeepMerge(dest[prop], val)
       }
